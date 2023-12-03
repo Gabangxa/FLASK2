@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #080808;
+            color: #E8E8E8;
+        }
+        #input-area, #result-area {
+            background-color: #080808;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        label, input, button {
+            display: block;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #4CAF50; 
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        #result-area {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="input-area">
+        <h1>Calculate your remaining life expectancy</h1>
+        <label for="birthdate">Your birthdate: </label>
+        <input type="date" id="birthdate"><br>
+        <label for="life-expectancy">Your life expectancy: </label>
+        <input type="number" id="life-expectancy" min="0" max="122"><br>
+        <button onclick="calculate()">Calculate</button>
+    </div>
+    <div id="result-area">
+        <h2>Your remaining life expectancy is:</h2>
+        <p id="years"></p>
+        <p id="months"></p>
+        <p id="weeks"></p>
+        <p id="days"></p>
+    </div>
+
+    <script>
+        function calculate() {
+            var birthdate = new Date(document.getElementById('birthdate').value);
+            var lifeExpectancy = document.getElementById('life-expectancy').value;
+            if(isNaN(birthdate.getTime()) || lifeExpectancy === ''){
+                alert("Please fill in both fields");
+                return;
+            }
+            var currentAge = (new Date() - birthdate) / (1000 * 60 * 60 * 24 * 365.25);
+            if(currentAge > lifeExpectancy){
+                alert("Your current age cannot be greater than your life expectancy");
+                return;
+            }
+
+            var deathDate = new Date(birthdate.getTime());
+            deathDate.setFullYear(birthdate.getFullYear() + parseInt(lifeExpectancy));
+
+            var remainingYears = deathDate.getFullYear() - new Date().getFullYear();
+            var remainingMonths = (deathDate.getFullYear() - new Date().getFullYear()) * 12 + deathDate.getMonth() - new Date().getMonth();
+            var remainingDays = Math.floor((deathDate - new Date()) / (1000 * 60 * 60 * 24));
+            var remainingWeeks = Math.floor(remainingDays / 7); // Calculate remaining weeks
+            
+            document.getElementById('years').innerText = "Years: " + Math.floor(remainingYears);
+            document.getElementById('months').innerText = "Months: " + Math.floor(remainingMonths);
+            document.getElementById('days').innerText = "Days: " + Math.floor(remainingDays);
+            document.getElementById('weeks').innerText = "Weeks: " + remainingWeeks; // Display remaining weeks
+            
+            document.getElementById('input-area').style.display = 'none';
+            document.getElementById('result-area').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
